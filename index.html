@@ -1,0 +1,111 @@
+<style>
+    /*The style is written here*/
+    .demo-table table tbody tr td span{
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width:580px;
+        display:block;
+    }
+
+</style>
+<div class="bt-form">
+    <div class="bt-w-main">
+        <!--Menu section-->
+        <div class="bt-w-menu">
+            <p class="bgw" onclick="demo.get_index()">Overview</p>
+            <p onclick="demo.get_logs()">Operation log</p>
+        </div>
+        <!--Content section-->
+        <div class="bt-w-con pd15">
+            <div class="plugin_body"></div>
+        </div>
+    </div>
+</div>
+
+<!--JS script part, do not write JS script elsewhere-->
+<script type="text/javascript" src="/demo/static/js/test.js"></script> <!--Refer to the plugin directory static/js/test.js-->
+<script type="text/javascript">
+
+    //Define window size
+    $('.layui-layer-page').css({ 'width': '900px' });
+
+    //Left test menu switching effect
+    $(".bt-w-menu p").click(function () {
+        $(this).addClass('bgw').siblings().removeClass('bgw')
+    });
+
+    /**
+	  * Plug-in interaction object
+      * All your JS code can be written inside
+      * If you are not used to object-oriented programming in JS, you can delete this object and write it in a traditional functional way
+     * */
+    var demo = {
+        //Constructing overview content
+        get_index: function () {
+            $('.plugin_body').html("<h1 style='text-align:center;margin-top:30%;'>This is an example plugin!</h1>");
+        },
+
+        /**
+         * Get panel logs
+         * @param p Acquired Pagination
+         */
+        get_logs : function (p) {
+            if (p == undefined) p = 1;
+            request_plugin('demo', 'get_logs', { p: p, callback: 'demo.get_logs' }, function (rdata) {
+                var log_body = '';
+                for (var i = 0; i < rdata.data.length; i++) {
+                    log_body += '<tr><td>' + rdata.data[i].addtime + '</td><td><span title="' + rdata.data[i].log + '">' + rdata.data[i].log + '</span></td></tr>'
+                }
+
+                var my_body = '<div class="demo-table"><div class="divtable">'
+                            +'<table class="table table-hover">'
+                                +'<thead>'
+                                    +'<tr><th width="150">Time</th><th>Details</th></tr>'
+                                +'</thead>'
+                                +'<tbody>'+ log_body + '</tbody>'
+                            +'</table>'
+                    + '</div><div class="page" style="margin-top:15px">' + rdata.page + '</div</div>';
+
+                $('.plugin_body').html(my_body);
+            });
+        }
+
+    }
+
+    /**
+	  * Send request to plugin
+      * Note: Unless you know how to construct your own ajax to access the plugin correctly, it is recommended that you use this method to communicate with the backend
+      * @param plugin_name Plugin name eg: demo
+      * @param function_name The name of the method to be accessed, such as: get_logs
+      * @param args Parameters passed to the plugin method Please pass in an array, example: {p: 1, rows: 10, callback: "demo.get_logs"}
+      * @param callback Please pass in the processing function, the response content will be passed in the first parameter
+     */
+    function request_plugin(plugin_name, function_name, args, callback, timeout) {
+        if (!timeout) timeout = 3600;
+        $.ajax({
+            type:'POST',
+            url: '/plugin?action=a&s=' + function_name + '&name=' + plugin_name,
+            data: args,
+            timeout:timeout,
+            success: function(rdata) {
+                if (!callback) {
+                    layer.msg(rdata.msg, { icon: rdata.status ? 1 : 2 });
+                    return;
+                }
+                return callback(rdata);
+            },
+            error: function(ex) {
+                if (!callback) {
+                    layer.msg('The request process found an error!', { icon: 2 });
+                    return;
+                }
+                return callback(ex);
+            }
+        });
+    }
+
+    //Called when the window is first opened
+    demo.get_index();
+
+</script>

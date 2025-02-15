@@ -1,0 +1,9 @@
+{
+  "title": "Varnish Cache",
+  "name": "aa_varnish",
+  "ps": "Easily integrate and manage Varnish Cache with Nginx.",
+  "versions": "1.0",
+  "checks": "/www/server/panel/plugin/aa_varnish",
+  "author": "Nben M.",
+  "home": "https://nben.com.np"
+}
