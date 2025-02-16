@@ -1,0 +1,51 @@
+{include file="header"}
+<div class="container">
+    <h3>Varnish Cache Management</h3>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Website</th>
+                <th>Cache Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {foreach $sites as $site}
+            <tr>
+                <td>{$site.name}</td>
+                <td>
+                    <div class="switch">
+                        <input type="checkbox" class="bt-switch" 
+                               data-site="{$site.name}" 
+                               {if $site.cache_enabled}checked{/if}>
+                    </div>
+                </td>
+                <td>
+                    <button class="btn btn-xs btn-default" 
+                            onclick="purgeCache('{$site.name}')">
+                        <i class="fa fa-trash"></i> Purge
+                    </button>
+                </td>
+            </tr>
+            {/foreach}
+        </tbody>
+    </table>
+</div>
+
+<script>
+function toggleCache(site, status) {
+    ajaxPost('plugin/varnish_cache/toggleCache', {
+        site: site,
+        status: status
+    }, function(res){
+        showMsg(res.msg || 'Operation successful');
+    });
+}
+
+function purgeCache(site) {
+    ajaxPost('plugin/varnish_cache/purgeCache', {site: site}, function(){
+        showMsg('Cache purged successfully');
+    });
+}
+</script>
+{include file="footer"}

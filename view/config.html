@@ -1,0 +1,39 @@
+{include file="header"}
+<div class="container">
+    <h3>Varnish Configuration</h3>
+    
+    <div class="bt-form">
+        <form id="varnishConfig">
+            <div class="form-group">
+                <label>Cache TTL (minutes)</label>
+                <input type="number" class="form-control" name="ttl" value="120">
+            </div>
+            
+            <div class="form-group">
+                <label>Memory Allocation</label>
+                <select class="form-control" name="memory">
+                    <option value="256M">256MB</option>
+                    <option value="512M">512MB</option>
+                    <option value="1G">1GB</option>
+                </select>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Save Settings</button>
+        </form>
+    </div>
+    
+    <div class="alert alert-info mt-3">
+        <strong>Advanced Users:</strong> Edit VCL files directly in 
+        <code>/etc/varnish/</code> after initial configuration
+    </div>
+</div>
+
+<script>
+$('#varnishConfig').submit(function(e){
+    e.preventDefault();
+    ajaxPost('plugin/varnish_cache/saveConfig', $(this).serialize(), function(res){
+        showMsg(res.msg);
+    });
+});
+</script>
+{include file="footer"}
