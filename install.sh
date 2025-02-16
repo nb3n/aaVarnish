@@ -12,7 +12,8 @@ Install()
 	echo 'Installing...'
 	#==================================================================
 	#Depends on the installation
-
+	echo 'Copying Pluin Logo to static asset' 
+	cp -a -r /www/server/panel/plugin/aa_varnish/icon.png /www/server/panel/static/img/soft_ico/ico-aa_varnish.png
 
 	#Depends on the end of installation
 	#==================================================================
