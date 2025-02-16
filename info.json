@@ -5,5 +5,15 @@
   "versions": "1.0",
   "checks": "/www/server/panel/plugin/aa_varnish",
   "author": "Nben M.",
-  "home": "https://nben.com.np"
+  "home": "https://nben.com.np",
+  "price": 0,
+  "display": 0,
+  "global": 0,
+  "tips": "Easily enable and manage Varnish Cache for your domains.",
+  "type": "soft",
+  "script": "index.py",
+  "config": {
+    "varnish_version": "7.0",
+    "nginx_support": true
+  }
 }
