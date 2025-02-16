@@ -1,0 +1,41 @@
+<script src="/static/js/jquery.min.js"></script>
+<h1>Varnish Cache Manager</h1>
+<div>
+    <button onclick="getWebsites()">Load Websites</button>
+    <ul id="websites"></ul>
+</div>
+
+<script>
+    function getWebsites() {
+        $.post('/aapanel_varnish/get_websites.json', function(data) {
+            let sites = data.msg;
+            let html = "";
+            sites.forEach(site => {
+                html += `<li>${site.name} 
+                    <button onclick="enableCache('${site.name}')">Enable</button>
+                    <button onclick="disableCache('${site.name}')">Disable</button>
+                    <button onclick="purgeCache('${site.name}')">Purge</button>
+                </li>`;
+            });
+            $('#websites').html(html);
+        });
+    }
+
+    function enableCache(domain) {
+        $.post('/aapanel_varnish/enable_cache.json', { domain }, function(data) {
+            alert(data.msg);
+        });
+    }
+
+    function disableCache(domain) {
+        $.post('/aapanel_varnish/disable_cache.json', { domain }, function(data) {
+            alert(data.msg);
+        });
+    }
+
+    function purgeCache(domain) {
+        $.post('/aapanel_varnish/purge_cache.json', { domain }, function(data) {
+            alert(data.msg);
+        });
+    }
+</script>

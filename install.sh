@@ -1,19 +1,12 @@
 #!/bin/bash
-# Check dependencies
-if ! [ -x "$(command -v nginx)" ]; then
-    echo '{"status":false,"msg":"Nginx not found"}'
+echo "Checking if Nginx is installed..."
+if ! command -v nginx &> /dev/null; then
+    echo "Nginx is required. Please install it first."
     exit 1
 fi
 
-# Install Varnish based on OS
-if [ -f /etc/redhat-release ]; then
-    yum install -y varnish
-elif [ -f /etc/lsb-release ]; then
-    apt-get install -y varnish
-fi
-
-# Backup original configs
-mkdir -p backup/nginx
-cp /www/server/nginx/conf/nginx.conf backup/nginx/
-
-echo '{"status":true,"msg":"Installation complete"}'
+echo "Installing Varnish..."
+yum install -y varnish
+systemctl enable varnish
+systemctl start varnish
+echo "Varnish installed successfully."

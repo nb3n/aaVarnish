@@ -1,15 +1,10 @@
 {
   "title": "Varnish Cache",
-  "name": "aa_varnish",
+  "name": "aapanel_varnish",
   "ps": "Easily integrate and manage Varnish Cache with Nginx.",
   "versions": "1.0",
-  "checks": "/www/server/panel/plugin/aa_varnish",
+  "checks": "/www/server/panel/plugin/aapanel_varnish",
   "author": "Nben M.",
   "home": "https://nben.com.np",
-  "module": "aa_varnish",
-  "price": 0,
-  "scripts": [
-      "/bin/bash ./install.sh",
-      "/bin/bash ./uninstall.sh"
-  ]
+  "price": 0
 }
