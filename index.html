@@ -1,4 +1,6 @@
 <script src="/static/js/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <style>
     .bt-w-menu{width: 140px;}
     .bt-w-con{margin-left: 140px;}
@@ -214,24 +216,31 @@
         });
     }
 
+    function showAlert(response) {
+        Swal.fire({
+            title: response.status ? 'Success!' : 'Error!',
+            text: response.msg,
+            icon: response.status ? 'success' : 'error'
+        }).then(() => {
+            getWebsites(); // Reload site list after confirmation
+        });
+    }
+    
     function enableCache(domain) {
         $.post('/aapanel_varnish/enable_cache.json', { domain }, function(data) {
-            alert(data.msg);
-            getWebsites(); // Reload site list
+            showAlert(data);
         });
     }
 
     function disableCache(domain) {
         $.post('/aapanel_varnish/disable_cache.json', { domain }, function(data) {
-            alert(data.msg);
-            getWebsites(); // Reload site list
+            showAlert(data);
         });
     }
 
     function purgeCache(domain) {
         $.post('/aapanel_varnish/purge_cache.json', { domain }, function(data) {
-            alert(data.msg);
-            getWebsites(); // Reload site list
+            showAlert(data);
         });
     }
 
