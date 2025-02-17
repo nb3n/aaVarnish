@@ -139,7 +139,9 @@
                 	</div>
                 	<div class="tbTbody" style="max-height: 330px;overflow: auto;">
                 		<table class="table table-hover">
-		                    <tbody id="domainList"><tr>	                        <td>naria.monster</td>	                        <td style="text-align:right">	                            <a class="btlink soa_domain" href="javascript:;" data-domain="naria.monster">SOA</a>&nbsp;&nbsp;|&nbsp;&nbsp;	                            <a class="btlink analysisList" href="javascript:;" data-domain="naria.monster">Details</a>&nbsp;&nbsp;|&nbsp;&nbsp;	                            <a class="btlink analysisRenew" href="javascript:;" data-domain="naria.monster">Recovery</a>&nbsp;&nbsp;|&nbsp;&nbsp;	                            <a class="btlink deleteDomain" style="color:red" href="javascript:;" data-domain="naria.monster">Delete</a>	                        </td>	                    </tr><tr>	                        <td>nben.com.np</td>	                        <td style="text-align:right">	                            <a class="btlink soa_domain" href="javascript:;" data-domain="nben.com.np">SOA</a>&nbsp;&nbsp;|&nbsp;&nbsp;	                            <a class="btlink analysisList" href="javascript:;" data-domain="nben.com.np">Details</a>&nbsp;&nbsp;|&nbsp;&nbsp;	                            <a class="btlink analysisRenew" href="javascript:;" data-domain="nben.com.np">Recovery</a>&nbsp;&nbsp;|&nbsp;&nbsp;	                            <a class="btlink deleteDomain" style="color:red" href="javascript:;" data-domain="nben.com.np">Delete</a>	                        </td>	                    </tr><tr>	                        <td>nabinastha.com.np</td>	                        <td style="text-align:right">	                            <a class="btlink soa_domain" href="javascript:;" data-domain="nabinastha.com.np">SOA</a>&nbsp;&nbsp;|&nbsp;&nbsp;	                            <a class="btlink analysisList" href="javascript:;" data-domain="nabinastha.com.np">Details</a>&nbsp;&nbsp;|&nbsp;&nbsp;	                            <a class="btlink analysisRenew" href="javascript:;" data-domain="nabinastha.com.np">Recovery</a>&nbsp;&nbsp;|&nbsp;&nbsp;	                            <a class="btlink deleteDomain" style="color:red" href="javascript:;" data-domain="nabinastha.com.np">Delete</a>	                        </td>	                    </tr></tbody>
+		                    <tbody id="domainList">
+                                
+                            </tbody>
 		                </table>
                     </div>
                 </div>
@@ -196,13 +198,14 @@
             let sites = data.msg;
             let html = "";
             sites.forEach(site => {
-                html += `<li>${site.name} 
-                    <button onclick="enableCache('${site.name}')">Enable</button>
-                    <button onclick="disableCache('${site.name}')">Disable</button>
-                    <button onclick="purgeCache('${site.name}')">Purge</button>
-                </li>`;
+                html += `<tr>
+                    <td>${site.name}</td>	                        
+                    <td style="text-align:right">	                            
+                        <a class="btlink" style="color:red" href="javascript:;" data-domain="${site.name}">Status</a>	                        
+                    </td>	                    
+                </tr>`;
             });
-            $('#websites').html(html);
+            $('#domainList').html(html);
         });
     }
 
@@ -223,4 +226,6 @@
             alert(data.msg);
         });
     }
+
+    getWebsites();
 </script>
