@@ -1,8 +1,193 @@
 <script src="/static/js/jquery.min.js"></script>
-<h1>Varnish Cache Manager</h1>
-<div>
-    <button onclick="getWebsites()">Load Websites</button>
-    <ul id="websites"></ul>
+<style>
+    .bt-w-menu{width: 140px;}
+    .bt-w-con{margin-left: 140px;}
+    .bt-select,
+    .dns-select{
+        width: 400px;
+        height: 35px;
+        line-height: 35px;
+        border: 1px solid #ccc;
+        border-radius: 2px;
+        position: relative;
+    }
+    .bt-select .bt-select-tips,
+    .dns-select .dns-select-tips{
+        color: #999;
+    }
+    .bt-select .bt-select-list,
+    .dns-select .dns-select-list{
+        display: none;
+        position: absolute;
+        z-index: 999;
+        max-height: 220px;
+        overflow-y: auto;
+        width: 100%;
+        top: 33px;
+        left: 0;
+        background: #fff;
+        border: 1px solid #ccc;
+    }
+    .bt-select .bt-select-list.active,
+    .dns-select .dns-select-list.active{
+        display: block;
+    }
+    .bt-select .bt-select-list li,
+    .dns-select .dns-select-list li{
+        padding:  2px 10px;
+        cursor: pointer;
+    }
+    .bt-select .bt-select-list li.active,
+    .dns-select .dns-select-list li.active{
+        background: #efefef;
+    }
+    .bt-select .bt-select-list li:hover,
+    .dns-select .dns-select-list li:hover{
+        background: #efefef;
+    }
+    .bt-select-input,
+    .dns-select-input{
+        position: relative;
+        cursor: pointer;
+        padding-left: 10px;
+    }
+    .max_box_view{
+        display: none;
+    }
+
+    .bt-down-icon,
+    .dns-down-icon{
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 10px;
+        height: 10px;
+        border-left:2px solid #666;
+        border-bottom:2px solid #666;
+        transform: rotate(-45deg);
+        transition: all 500ms;
+    }
+    /*.addanalysisFrom .line{*/
+    /*    margin-bottom: 16px;*/
+
+    /*}*/
+    .addanalysisFrom .line .tname{
+        height: 35px;
+        line-height: 35px;
+    }
+    .addanalysisFrom .line input{
+        height: 35px;
+        line-height: 35px;
+        padding-left: 10px;
+    }
+    .layui-layer-page .layui-layer-content{
+        overflow: initial;
+    }
+    .word_width .bt-select-tips{
+        width: 310px;
+        display: inline-block;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        vertical-align: middle;
+    }
+    #soa_orm .line .info-r{
+        margin-bottom: 10px;
+    }
+    #soa_orm .line .info-r .bt-input-text{
+        width: 200px;
+    }
+    .bt-ico-ask{
+        border: 1px solid #fb7d00;
+        border-radius: 8px;
+        color: #fb7d00;
+        cursor: help;
+        display: inline-block;
+        font-family: arial;
+        font-size: 11px;
+        font-style: normal;
+        height: 16px;
+        line-height: 16px;
+        margin-left: 5px;
+        text-align: center;
+        width: 16px;
+    }
+</style>
+<div class="bt-form">
+    <div class="bt-w-main">
+        <div class="bt-w-menu">
+            <p class="bgw">Domain name list</p>
+            <p>Defualt NS</p>
+            <p>Service</p>
+            <p>Logs</p>
+        </div>
+        <div class="bt-w-con pd15 divtable">
+            <div class="bt-box active">
+                <div class="mb10">
+                    <button class="btn btn-success btn-sm va0 mb15 addDomain" style="margin-right: 10px">Add domain name</button>
+                    <a href="https://doc.aapanel.com/web/#/3?page_id=180" target="blank" style="color:#20a53a;font-size: 13px;display: inline-block;margin-left: 10px;">[Help]</a>
+                    <button class="btn btn-default btn-sm va0 mb15 pdns" style="display:none" onclick="DnsManager.get_can_listen_view()">Set the listening IP</button>
+                    <ul class="help-info-text c7 mtb15" style="display: none;">
+				        <li>If the set IP cannot communicate, please try setting the listening IP to [ any ]</li>
+			        </ul>
+                </div>
+                <div class="table-box">
+                	<div class="tbThead">
+                		<table class="table table-hover">
+	                    	<thead><tr><th>Domain</th><th style="text-align: right">Operating</th></tr></thead>
+		                </table>
+                	</div>
+                	<div class="tbTbody" style="max-height: 330px;overflow: auto;">
+                		<table class="table table-hover">
+		                    <tbody id="domainList"><tr>	                        <td>naria.monster</td>	                        <td style="text-align:right">	                            <a class="btlink soa_domain" href="javascript:;" data-domain="naria.monster">SOA</a>&nbsp;&nbsp;|&nbsp;&nbsp;	                            <a class="btlink analysisList" href="javascript:;" data-domain="naria.monster">Details</a>&nbsp;&nbsp;|&nbsp;&nbsp;	                            <a class="btlink analysisRenew" href="javascript:;" data-domain="naria.monster">Recovery</a>&nbsp;&nbsp;|&nbsp;&nbsp;	                            <a class="btlink deleteDomain" style="color:red" href="javascript:;" data-domain="naria.monster">Delete</a>	                        </td>	                    </tr><tr>	                        <td>nben.com.np</td>	                        <td style="text-align:right">	                            <a class="btlink soa_domain" href="javascript:;" data-domain="nben.com.np">SOA</a>&nbsp;&nbsp;|&nbsp;&nbsp;	                            <a class="btlink analysisList" href="javascript:;" data-domain="nben.com.np">Details</a>&nbsp;&nbsp;|&nbsp;&nbsp;	                            <a class="btlink analysisRenew" href="javascript:;" data-domain="nben.com.np">Recovery</a>&nbsp;&nbsp;|&nbsp;&nbsp;	                            <a class="btlink deleteDomain" style="color:red" href="javascript:;" data-domain="nben.com.np">Delete</a>	                        </td>	                    </tr><tr>	                        <td>nabinastha.com.np</td>	                        <td style="text-align:right">	                            <a class="btlink soa_domain" href="javascript:;" data-domain="nabinastha.com.np">SOA</a>&nbsp;&nbsp;|&nbsp;&nbsp;	                            <a class="btlink analysisList" href="javascript:;" data-domain="nabinastha.com.np">Details</a>&nbsp;&nbsp;|&nbsp;&nbsp;	                            <a class="btlink analysisRenew" href="javascript:;" data-domain="nabinastha.com.np">Recovery</a>&nbsp;&nbsp;|&nbsp;&nbsp;	                            <a class="btlink deleteDomain" style="color:red" href="javascript:;" data-domain="nabinastha.com.np">Delete</a>	                        </td>	                    </tr></tbody>
+		                </table>
+                    </div>
+                </div>
+                <button class="btn btn-success btn-sm mt10 dnsExport" style="margin-right: 10px" autocomplete="off">Export</button>
+                <button class="btn btn-success btn-sm mt10 dnsImport" onclick="$('#file_input').click()">Import</button>
+                <input type="file" id="file_input" onchange="DnsManager.select_file(this.files,'0')" autocomplete="off">
+            </div>
+            <div></div>
+            <div class="bt-box" style="display: none;">
+                <div class="soft-man-con bt-form dnsServer">
+                    <div class="bt-form">
+                    <div class="line">
+                        <span class="tname">NameServer 1</span>
+                        <div class="info-r c4"><input class="bt-input-text" type="text" name="ns_default_val" placeholder="Your Name Server,eg: ns1.aapanel.com,Optional" autocomplete="off" value="" style="width:270px"></div>
+                        <span class="tname">NameServer 2</span>
+                        <div class="info-r c4"><input class="bt-input-text" type="text" name="ns_default_val2" placeholder="Your Name Server,eg: ns2.aapanel.com,Optional" autocomplete="off" value="" style="width:270px"></div>
+                        <span class="tname"></span>
+                        <div class="info-r c4">
+                        </div>
+                    </div>
+                    <div class="sfm-opt">
+                        <button class="btn btn-default btn-sm" style="display:block;" id="saveDefaultNsFn">Save</button>
+                    </div>
+                </div>
+                </div>
+            </div>
+            <div class="bt-box" style="display: none;">
+                <div class="soft-man-con bt-form dnsServer">
+                    <p class="status">Status：<span>Running</span>
+                        <span style="color: #20a53a; margin-left: 3px;" class="glyphicon glyphicon glyphicon-play"></span>
+                    </p>
+                    <div class="sfm-opt">
+                        <button class="btn btn-default btn-sm StartDnsServer" style="display: none;">Start</button>
+                        <button class="btn btn-default btn-sm StopDnsServer" style="display: none;">Stop</button>
+                        <button class="btn btn-default btn-sm RestartDnsServer">Restart</button>
+                    </div>
+                </div>
+            </div>
+            <div class="bt-box" style="display: none;">
+                <button class="btn btn-success btn-sm va0 pull-right mb15 clearLogs" disabled="disabled">Clean up logs</button>
+                <table width="100%" border="0" cellpadding="0" cellspacing="0" class="table table-hover">
+                    <thead><tr><th>Details</th><th>Operating time</th></tr></thead>
+                    <tbody id="logsBody"></tbody>
+                </table>
+                <div id="logsBodyPage" class="page"></div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
