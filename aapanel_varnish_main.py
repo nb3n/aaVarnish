@@ -60,7 +60,14 @@ class aapanel_varnish_main:
         public.ExecShell(f"varnishadm ban req.http.host == {domain}")
         return public.ReturnMsg(True, f"Cache purged for {domain}")
 
-    # Get list of all Nginx-hosted websites
+    # Get list of all Nginx-hosted websites with Varnish status
     def get_websites(self, args):
         sites = public.M('sites').field('name').select()
+        varnish_config_path = "/www/server/panel/plugin/aapanel_varnish/"
+        
+        for site in sites:
+            domain = site["name"]
+            config_file = os.path.join(varnish_config_path, f"{domain}.conf")
+            site["varnish_status"] = os.path.exists(config_file)
+        
         return public.ReturnMsg(True, sites)

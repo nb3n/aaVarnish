@@ -129,7 +129,12 @@
                 <div class="table-box">
                 	<div class="tbThead">
                 		<table class="table table-hover">
-	                    	<thead><tr><th>Domain</th><th style="text-align: right">Operating</th></tr></thead>
+	                    	<thead>
+                                <tr>
+                                    <th>Domain</th>
+                                    <th style="text-align: right">Operating</th>
+                                </tr>
+                            </thead>
 		                </table>
                 	</div>
                 	<div class="tbTbody" style="max-height: 330px;overflow: auto;">
@@ -140,9 +145,6 @@
 		                </table>
                     </div>
                 </div>
-                <button class="btn btn-success btn-sm mt10 dnsExport" style="margin-right: 10px" autocomplete="off">Export</button>
-                <button class="btn btn-success btn-sm mt10 dnsImport" onclick="$('#file_input').click()">Import</button>
-                <input type="file" id="file_input" onchange="DnsManager.select_file(this.files,'0')" autocomplete="off">
             </div>
             <div></div>
             <div class="bt-box" style="display: none;">
@@ -196,7 +198,8 @@
                 html += `<tr>
                     <td>${site.name}</td>	                        
                     <td style="text-align:right">	                            
-                        <a class="btlink" style="color:red" href="javascript:;" data-domain="${site.name}">Status</a>	                        
+                        <a class="btlink" style="color:red" href="javascript:;" data-domain="${site.name}">Status</a>	
+                        <div role="separator" class="n-divider __divider-1cpbmap n-divider--vertical n-divider--no-title mx-4px!"></div>                        
                     </td>	                    
                 </tr>`;
             });
