@@ -6,7 +6,7 @@ if ! command -v nginx &> /dev/null; then
 fi
 
 echo "Installing Varnish..."
-yum install -y varnish
+yum install -y varnish || apt install varnish -y
 systemctl enable varnish
 systemctl start varnish
 echo "Varnish installed successfully."
