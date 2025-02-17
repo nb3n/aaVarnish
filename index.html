@@ -195,16 +195,16 @@
             let html = "";
             sites.forEach(site => {
                 let varnishStatus = site.varnish_status ? "Enabled" : "Disabled";
-                let statusColor = site.varnish_status ? "green" : "red";
+                let statusColor = site.varnish_status ? "red" : "green";
                 let actionText = site.varnish_status ? "Disable" : "Enable";
                 let actionFunc = site.varnish_status ? "disableCache" : "enableCache";
-                let purgeLink = site.varnish_status ? `<button class="btlink purge-cache" href="javascript:;" onclick="purgeCache('${site.name}')" style="color: orange;">Purge</button>` : '';
+                let purgeLink = site.varnish_status ? `<a class="btlink purge-cache" href="javascript:;" onclick="purgeCache('${site.name}')" style="color: orange;">Purge</a>` : '';
                 let divider = site.varnish_status ? `<div role="separator" class="n-divider __divider-1cpbmap n-divider--vertical n-divider--no-title mx-4px!"></div>` : '';
 
                 html += `<tr>
                     <td>${site.name}</td>	                        
                     <td style="text-align:right">	                            
-                        <button class="btlink" style="color:${statusColor}" onclick="${actionFunc}('${site.name}')">${actionText}</button>
+                        <a class="btlink" style="color:${statusColor}" onclick="${actionFunc}('${site.name}')">${actionText}</a>
                         ${divider}
                         ${purgeLink}
                     </td>	                    
