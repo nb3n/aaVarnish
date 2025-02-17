@@ -188,7 +188,6 @@
         </div>
     </div>
 </div>
-
 <script>
     function getWebsites() {
         $.post('/aapanel_varnish/get_websites.json', function(data) {
@@ -197,14 +196,16 @@
             sites.forEach(site => {
                 let varnishStatus = site.varnish_status ? "Enabled" : "Disabled";
                 let statusColor = site.varnish_status ? "green" : "red";
-                let purgeLink = site.varnish_status ? `<a class="btlink purge-cache" href="javascript:;" data-domain="${site.name}" style="color:blue">Purge</a>` : '';
+                let actionText = site.varnish_status ? "Disable" : "Enable";
+                let actionFunc = site.varnish_status ? "disableCache" : "enableCache";
+                let purgeLink = site.varnish_status ? `<button class="btlink purge-cache" href="javascript:;" onclick="purgeCache('${site.name}')" style="color: orange;">Purge</button>` : '';
                 let divider = site.varnish_status ? `<div role="separator" class="n-divider __divider-1cpbmap n-divider--vertical n-divider--no-title mx-4px!"></div>` : '';
-    
+
                 html += `<tr>
                     <td>${site.name}</td>	                        
                     <td style="text-align:right">	                            
-                        <span style="color:${statusColor}">${varnishStatus}</span>
-                        ${divider}                        
+                        <button class="btlink" style="color:${statusColor}" onclick="${actionFunc}('${site.name}')">${actionText}</button>
+                        ${divider}
                         ${purgeLink}
                     </td>	                    
                 </tr>`;
@@ -212,24 +213,25 @@
             $('#domainList').html(html);
         });
     }
-    
-    
 
     function enableCache(domain) {
         $.post('/aapanel_varnish/enable_cache.json', { domain }, function(data) {
             alert(data.msg);
+            getWebsites(); // Reload site list
         });
     }
 
     function disableCache(domain) {
         $.post('/aapanel_varnish/disable_cache.json', { domain }, function(data) {
             alert(data.msg);
+            getWebsites(); // Reload site list
         });
     }
 
     function purgeCache(domain) {
         $.post('/aapanel_varnish/purge_cache.json', { domain }, function(data) {
             alert(data.msg);
+            getWebsites(); // Reload site list
         });
     }
 
