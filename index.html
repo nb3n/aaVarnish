@@ -195,17 +195,25 @@
             let sites = data.msg;
             let html = "";
             sites.forEach(site => {
+                let varnishStatus = site.varnish_status ? "Enabled" : "Disabled";
+                let statusColor = site.varnish_status ? "green" : "red";
+                let purgeLink = site.varnish_status ? `<a class="btlink purge-cache" href="javascript:;" data-domain="${site.name}" style="color:blue">Purge</a>` : '';
+                let divider = site.varnish_status ? `<div role="separator" class="n-divider __divider-1cpbmap n-divider--vertical n-divider--no-title mx-4px!"></div>` : '';
+    
                 html += `<tr>
                     <td>${site.name}</td>	                        
                     <td style="text-align:right">	                            
-                        <a class="btlink" style="color:red" href="javascript:;" data-domain="${site.name}">Status</a>	
-                        <div role="separator" class="n-divider __divider-1cpbmap n-divider--vertical n-divider--no-title mx-4px!"></div>                        
+                        <span style="color:${statusColor}">${varnishStatus}</span>
+                        ${divider}                        
+                        ${purgeLink}
                     </td>	                    
                 </tr>`;
             });
             $('#domainList').html(html);
         });
     }
+    
+    
 
     function enableCache(domain) {
         $.post('/aapanel_varnish/enable_cache.json', { domain }, function(data) {
