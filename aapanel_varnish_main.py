@@ -12,7 +12,7 @@ class aapanel_varnish_main:
 
         # Ensure the logs folder exists
         if not os.path.exists(log_folder):
-            os.makedirs(log_folder, mode=0o755)  # Explicit permission for folder creation
+            os.makedirs(log_folder, mode=0o755, exist_ok=True)  # Explicit permission for folder creation
 
         # Ensure log file is created if not existing
         if not os.path.isfile(log_file):
@@ -63,19 +63,30 @@ class aapanel_varnish_main:
 
         return public.ReturnMsg(True, logs)
 
-    # Clean up the logs by deleting the log files   
+    # Clean up the logs by deleting the log files
     def clean_up_logs(self, args):
         log_folder = "/www/server/panel/plugin/aapanel_varnish/logs/"
+        log_files = os.listdir(log_folder)
         log_file = os.path.join(log_folder, "varnish_operations.log")
 
-        if os.path.exists(log_file):
-            with open(log_file, 'w') as file:
-                pass  # Truncates the file (empties it)
+        for log_file in log_files:
+            log_path = os.path.join(log_folder, log_file)
+            os.remove(log_path)
 
+        # Ensure the logs folder exists
+        if not os.path.exists(log_folder):
+            os.makedirs(log_folder, mode=0o755, exist_ok=True)  # Explicit permission for folder creation
+
+        # Ensure log file is created if not existing
+        if not os.path.isfile(log_file):
+            # Create the file if it doesn't exist
+            with open(log_file, "w", encoding="utf-8"):
+                pass
+            
             os.chmod(self.log_file, 0o755)  
 
-        return public.ReturnMsg(True, "Varnish operations log emptied successfully.")
-
+        return public.ReturnMsg(True, "Logs cleaned successfully.")
+    
     
     # Check Varnish service status
     def get_varnish_status(self, args):

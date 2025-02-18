@@ -5,6 +5,6 @@
   "versions": "1.0",
   "checks": "/www/server/panel/plugin/aapanel_varnish",
   "author": "Nben M.",
-  "home": "https://nben.com.np",
+  "home": "https://github.com/nb3n/aaVarnish",
   "price": 0
 }
