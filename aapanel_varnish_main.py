@@ -7,7 +7,6 @@ import time
 import logging
 
 class aapanel_varnish_main:
-    # Set up the logger
     def __init__(self):
         log_folder = "/www/server/panel/plugin/aapanel_varnish/logs/"
         log_file = os.path.join(log_folder, "varnish_operations.log")
@@ -26,13 +25,15 @@ class aapanel_varnish_main:
         self.logger = logging.getLogger(__name__)
         self.logger.setLevel(logging.INFO)
 
-        # File handler to log to file
-        file_handler = logging.FileHandler(log_file)
-        file_handler.setLevel(logging.INFO)
-        file_handler.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - %(message)s"))
+        # Check if the handler is already added to prevent duplicates
+        if not self.logger.handlers:
+            # File handler to log to file
+            file_handler = logging.FileHandler(log_file)
+            file_handler.setLevel(logging.INFO)
+            file_handler.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - %(message)s"))
 
-        # Adding file handler to the logger
-        self.logger.addHandler(file_handler)
+            # Adding file handler to the logger
+            self.logger.addHandler(file_handler)
         
     # Get logs from the logs folder
     def get_logs(self, args):
@@ -76,36 +77,45 @@ class aapanel_varnish_main:
     def start_varnish(self, args):
         try:
             public.ExecShell("systemctl start varnish")
+
             log_message = "Varnish started successfully."
             self.logger.info(log_message)
+
             return public.ReturnMsg(True, log_message)
         except Exception as e:
             error_message = f"Failed to start Varnish: {str(e)}"
             self.logger.error(log_message)
+
             return public.ReturnMsg(False, error_message)
 
     # Stop Varnish
     def stop_varnish(self, args):
         try:
             public.ExecShell("systemctl stop varnish")
+
             log_message = "Varnish stopped successfully."
             self.logger.info(log_message)
+
             return public.ReturnMsg(True, log_message)
         except Exception as e:
             error_message = f"Failed to stop Varnish: {str(e)}"
             self.logger.error(log_message)
+
             return public.ReturnMsg(False, error_message)
 
     # Restart Varnish
     def restart_varnish(self, args):
         try:
             public.ExecShell("systemctl restart varnish")
+
             log_message = "Varnish restarted successfully."
             self.logger.info(log_message)
+
             return public.ReturnMsg(True, log_message)
         except Exception as e:
             error_message = f"Failed to restart Varnish: {str(e)}"
             self.logger.error(log_message)
+
             return public.ReturnMsg(False, error_message)
     
     # Check if Nginx is installed
@@ -144,12 +154,15 @@ class aapanel_varnish_main:
 
             public.WriteFile(config_path, varnish_config)
             public.ServiceReload()
+
             log_message = f"Varnish enabled for {domain}."
             self.logger.info(log_message)
+
             return public.ReturnMsg(True, log_message)
         except Exception as e:
             error_message = f"Failed to enable Varnish for {domain}: {str(e)}"
             self.logger.error(log_message)
+
             return public.ReturnMsg(False, error_message)
 
     # Disable caching for a domain
@@ -162,12 +175,15 @@ class aapanel_varnish_main:
                 os.remove(config_path)
 
             public.ServiceReload()
+
             log_message = f"Varnish disabled for {domain}."
             self.logger.info(log_message)
+
             return public.ReturnMsg(True, log_message)
         except Exception as e:
             error_message = f"Failed to disable Varnish for {domain}: {str(e)}"
             self.logger.error(log_message)
+
             return public.ReturnMsg(False, error_message)
 
     # Purge cache
@@ -175,12 +191,15 @@ class aapanel_varnish_main:
         try:
             domain = args.domain
             public.ExecShell(f"varnishadm ban req.http.host == {domain}")
+            
             log_message = f"Cache purged for {domain}."
             self.logger.info(log_message)
+
             return public.ReturnMsg(True, log_message)
         except Exception as e:
             error_message = f"Failed to purge cache for {domain}: {str(e)}"
             self.logger.error(log_message)
+
             return public.ReturnMsg(False, error_message)
 
     # Get list of all Nginx-hosted websites with Varnish status
