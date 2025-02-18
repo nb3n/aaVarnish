@@ -219,6 +219,7 @@
     function handleVarnishAction(action) {
         $.post(`/aapanel_varnish/${action}.json`, function (data) {
             updateVarnishStatus();
+            loadLogs();
         });
     }
 
@@ -250,18 +251,21 @@
     function enableCache(domain) {
         $.post('/aapanel_varnish/enable_cache.json', { domain }, function(data) {
             getWebsites(); // Reload site list
+            loadLogs(); // Reload logs
         });
     }
 
     function disableCache(domain) {
         $.post('/aapanel_varnish/disable_cache.json', { domain }, function(data) {
             getWebsites(); // Reload site list
+            loadLogs(); // Reload logs
         });
     }
 
     function purgeCache(domain) {
         $.post('/aapanel_varnish/purge_cache.json', { domain }, function(data) {
             getWebsites(); // Reload site list
+            loadLogs(); // Reload logs
         });
     }
 
