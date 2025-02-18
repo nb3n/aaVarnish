@@ -5,7 +5,27 @@ import public  # aaPanel helper functions
 import os
 
 class aapanel_varnish_main:
+    # Check Varnish service status
+    def get_varnish_status(self, args):
+        status = public.ExecShell("systemctl is-active varnish")[0].strip()
+        is_running = status == "active"
+        return public.ReturnMsg(True, {"status": is_running, "message": "Running" if is_running else "Stopped"})
 
+    # Start Varnish
+    def start_varnish(self, args):
+        public.ExecShell("systemctl start varnish")
+        return public.ReturnMsg(True, "Varnish started successfully.")
+
+    # Stop Varnish
+    def stop_varnish(self, args):
+        public.ExecShell("systemctl stop varnish")
+        return public.ReturnMsg(True, "Varnish stopped successfully.")
+
+    # Restart Varnish
+    def restart_varnish(self, args):
+        public.ExecShell("systemctl restart varnish")
+        return public.ReturnMsg(True, "Varnish restarted successfully.")
+    
     # Check if Nginx is installed
     def check_nginx_installed(self, args):
         web_server = public.GetWebServer()
