@@ -13,27 +13,34 @@ class aapanel_varnish_main:
 
         # Ensure the logs folder exists
         if not os.path.exists(log_folder):
-            os.makedirs(log_folder, mode=0o755)  # Explicit permission for folder creation
+            os.makedirs(log_folder, mode=0o755, exist_ok=True)  # Explicit permission for folder creation
 
         # Ensure log file is created if not existing
         if not os.path.isfile(log_file):
             # Create the file if it doesn't exist
             with open(log_file, "w", encoding="utf-8"):
                 pass
+            
+            # Set file permissions to -rw-r--r--
+            os.chmod(self.log_file, 0o644)  
 
         # Set up logging configuration
         self.logger = logging.getLogger(__name__)
-        self.logger.setLevel(logging.INFO)
 
-        # Check if the handler is already added to prevent duplicates
-        if not self.logger.handlers:
-            # File handler to log to file
-            file_handler = logging.FileHandler(log_file)
-            file_handler.setLevel(logging.INFO)
-            file_handler.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - %(message)s"))
+        # Clear existing handlers if any
+        if self.logger.hasHandlers():
+            self.logger.handlers.clear()
 
-            # Adding file handler to the logger
-            self.logger.addHandler(file_handler)
+        # Configure logging
+        self.logger.setLevel(logging.DEBUG)
+
+        file_handler = logging.FileHandler(self.log_file)
+        file_handler.setLevel(logging.DEBUG)
+
+        formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
+        file_handler.setFormatter(formatter)
+
+        self.logger.addHandler(file_handler)
         
     # Get logs from the logs folder
     def get_logs(self, args):
@@ -84,7 +91,7 @@ class aapanel_varnish_main:
             return public.ReturnMsg(True, log_message)
         except Exception as e:
             error_message = f"Failed to start Varnish: {str(e)}"
-            self.logger.error(log_message)
+            self.logger.error(error_message)
 
             return public.ReturnMsg(False, error_message)
 
@@ -99,7 +106,7 @@ class aapanel_varnish_main:
             return public.ReturnMsg(True, log_message)
         except Exception as e:
             error_message = f"Failed to stop Varnish: {str(e)}"
-            self.logger.error(log_message)
+            self.logger.error(error_message)
 
             return public.ReturnMsg(False, error_message)
 
@@ -114,7 +121,7 @@ class aapanel_varnish_main:
             return public.ReturnMsg(True, log_message)
         except Exception as e:
             error_message = f"Failed to restart Varnish: {str(e)}"
-            self.logger.error(log_message)
+            self.logger.error(error_message)
 
             return public.ReturnMsg(False, error_message)
     
@@ -161,7 +168,7 @@ class aapanel_varnish_main:
             return public.ReturnMsg(True, log_message)
         except Exception as e:
             error_message = f"Failed to enable Varnish for {domain}: {str(e)}"
-            self.logger.error(log_message)
+            self.logger.error(error_message)
 
             return public.ReturnMsg(False, error_message)
 
@@ -182,7 +189,7 @@ class aapanel_varnish_main:
             return public.ReturnMsg(True, log_message)
         except Exception as e:
             error_message = f"Failed to disable Varnish for {domain}: {str(e)}"
-            self.logger.error(log_message)
+            self.logger.error(error_message)
 
             return public.ReturnMsg(False, error_message)
 
@@ -198,7 +205,7 @@ class aapanel_varnish_main:
             return public.ReturnMsg(True, log_message)
         except Exception as e:
             error_message = f"Failed to purge cache for {domain}: {str(e)}"
-            self.logger.error(log_message)
+            self.logger.error(error_message)
 
             return public.ReturnMsg(False, error_message)
 
