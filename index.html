@@ -151,9 +151,9 @@
                         <span style="color: #20a53a; margin-left: 3px;" class="glyphicon glyphicon glyphicon-play"></span>
                     </p>
                     <div class="sfm-opt">
-                        <button class="btn btn-default btn-sm StartVarnishServer">Start</button>
-                        <button class="btn btn-default btn-sm StopVarnishServer">Stop</button>
-                        <button class="btn btn-default btn-sm RestartVarnishServer">Restart</button>
+                        <button class="btn btn-default btn-sm StartVarnish" style="display: none;">Start</button>
+                        <button class="btn btn-default btn-sm StopVarnish" style="display: none;">Stop</button>
+                        <button class="btn btn-default btn-sm RestartVarnish">Restart</button>
                     </div>
                 </div>
             </div>
@@ -176,8 +176,18 @@
             let statusColor = status ? "green" : "red";
             let iconClass = status ? "glyphicon-play" : "glyphicon-stop";
 
+            // Update status text and icon
             $(".status span:first").text(statusText);
             $(".status span:last").attr("class", `glyphicon ${iconClass}`).css("color", statusColor);
+
+            // Show Start button if stopped, otherwise show Stop button
+            if (status) {
+                $(".StartVarnish").hide();
+                $(".StopVarnish").show();
+            } else {
+                $(".StartVarnish").show();
+                $(".StopVarnish").hide();
+            }
         });
     }
 
@@ -230,15 +240,15 @@
         });
     }
 
-    $(".StartVarnishServer").click(function () {
+    $(".StartVarnish").click(function () {
         handleVarnishAction('start_varnish');
     });
 
-    $(".StopVarnishServer").click(function () {
+    $(".StopVarnish").click(function () {
         handleVarnishAction('stop_varnish');
     });
 
-    $(".RestartVarnishServer").click(function () {
+    $(".RestartVarnish").click(function () {
         handleVarnishAction('restart_varnish');
     });
 
