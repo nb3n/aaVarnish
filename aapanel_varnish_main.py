@@ -191,7 +191,7 @@ class aapanel_varnish_main:
         try:
             domain = args.domain
             public.ExecShell(f"varnishadm ban req.http.host == {domain}")
-            
+
             log_message = f"Cache purged for {domain}."
             self.logger.info(log_message)
 
