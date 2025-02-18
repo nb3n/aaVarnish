@@ -283,11 +283,6 @@
 
     $(".clearLogs").click(function() {
         $.post('/aapanel_varnish/clean_up_logs.json', function(data) {
-            Swal.fire({
-                title: data.status ? 'Success' : 'Error',
-                text: data.msg,
-                icon: data.status ? 'success' : 'error'
-            });
             loadLogs();  // Reload logs after cleaning
         });
     });

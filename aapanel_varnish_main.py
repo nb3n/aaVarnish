@@ -63,16 +63,19 @@ class aapanel_varnish_main:
 
         return public.ReturnMsg(True, logs)
 
-    # Clean up the logs by deleting the log files
+    # Clean up the logs by deleting the log files   
     def clean_up_logs(self, args):
         log_folder = "/www/server/panel/plugin/aapanel_varnish/logs/"
-        log_files = os.listdir(log_folder)
+        log_file = os.path.join(log_folder, "varnish_operations.log")
 
-        for log_file in log_files:
-            log_path = os.path.join(log_folder, log_file)
-            os.remove(log_path)
+        if os.path.exists(log_file):
+            with open(log_file, 'w') as file:
+                pass  # Truncates the file (empties it)
 
-        return public.ReturnMsg(True, "Logs cleaned successfully.")
+            os.chmod(self.log_file, 0o755)  
+
+        return public.ReturnMsg(True, "Varnish operations log emptied successfully.")
+
     
     # Check Varnish service status
     def get_varnish_status(self, args):
