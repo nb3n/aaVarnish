@@ -156,7 +156,7 @@
                     </div>
                 </div>
             </div>
-            <div class="bt-box" id="logs-container">
+            <div class="bt-box" style="display: none;" id="logs-container">
                 <button class="btn btn-success btn-sm va0 pull-right mb15 clearLogs" disabled="disabled">Clean up logs</button>
                 <table width="100%" border="0" cellpadding="0" cellspacing="0" class="table table-hover">
                     <thead>
@@ -181,7 +181,7 @@
                 logs.forEach(log => {
                     let logTime = new Date(log.timestamp * 1000).toLocaleString(); // Convert timestamp to readable date
                     html += `<tr>
-                        <td>${log.filename}: ${log.content}</td>
+                        <td>${log.content}</td>
                         <td>${logTime}</td>
                     </tr>`;
                 });

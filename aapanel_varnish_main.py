@@ -28,9 +28,11 @@ class aapanel_varnish_main:
             with open(log_path, 'r') as file:
                 log_content = file.readlines()[-10:]  # Get last 10 lines for display
                 for line in log_content:
+                    # Assuming the message starts after a specific pattern (e.g., " - INFO - ")
+                    message = line.split(" - ")[-1].strip()  # This removes the timestamp and log level
                     logs.append({
                         'filename': log_file,
-                        'content': line.strip(),
+                        'content': message,
                         'timestamp': os.path.getmtime(log_path)
                     })
         
