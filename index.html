@@ -117,12 +117,11 @@
     <div class="bt-w-main">
         <div class="bt-w-menu">
             <p class="bgw">Domain name list</p>
-            <p>Defualt NS</p>
             <p>Service</p>
             <p>Logs</p>
         </div>
         <div class="bt-w-con pd15 divtable">
-            <div class="bt-box active">
+            <div class="bt-box active" id="domain-container">
                 <div class="mb10">
                     <a class="btn btn-success btn-sm va0 mb15 addDomain" href="/site/php" style="margin-right: 10px">Add domain name</a>
                 </div>
@@ -132,7 +131,7 @@
 	                    	<thead>
                                 <tr>
                                     <th>Domain</th>
-                                    <th style="text-align: right">Operating</th>
+                                    <th style="text-align: right">Action</th>
                                 </tr>
                             </thead>
 		                </table>
@@ -146,26 +145,7 @@
                     </div>
                 </div>
             </div>
-            <div></div>
-            <div class="bt-box" style="display: none;">
-                <div class="soft-man-con bt-form dnsServer">
-                    <div class="bt-form">
-                    <div class="line">
-                        <span class="tname">NameServer 1</span>
-                        <div class="info-r c4"><input class="bt-input-text" type="text" name="ns_default_val" placeholder="Your Name Server,eg: ns1.aapanel.com,Optional" autocomplete="off" value="" style="width:270px"></div>
-                        <span class="tname">NameServer 2</span>
-                        <div class="info-r c4"><input class="bt-input-text" type="text" name="ns_default_val2" placeholder="Your Name Server,eg: ns2.aapanel.com,Optional" autocomplete="off" value="" style="width:270px"></div>
-                        <span class="tname"></span>
-                        <div class="info-r c4">
-                        </div>
-                    </div>
-                    <div class="sfm-opt">
-                        <button class="btn btn-default btn-sm" style="display:block;" id="saveDefaultNsFn">Save</button>
-                    </div>
-                </div>
-                </div>
-            </div>
-            <div class="bt-box" style="display: none;">
+            <div class="bt-box" style="display: none;" id="service-container">
                 <div class="soft-man-con bt-form dnsServer">
                     <p class="status">Status：<span>Running</span>
                         <span style="color: #20a53a; margin-left: 3px;" class="glyphicon glyphicon glyphicon-play"></span>
@@ -177,7 +157,7 @@
                     </div>
                 </div>
             </div>
-            <div class="bt-box" style="display: none;">
+            <div class="bt-box" style="display: none;" id="logs-container">
                 <button class="btn btn-success btn-sm va0 pull-right mb15 clearLogs" disabled="disabled">Clean up logs</button>
                 <table width="100%" border="0" cellpadding="0" cellspacing="0" class="table table-hover">
                     <thead><tr><th>Details</th><th>Operating time</th></tr></thead>
@@ -189,6 +169,22 @@
     </div>
 </div>
 <script>
+    $(document).ready(function () {
+        $(".bt-w-menu p").click(function () {
+            // Remove active class from all menu items
+            $(".bt-w-menu p").removeClass("bgw");
+            
+            // Add active class to the clicked menu item
+            $(this).addClass("bgw");
+
+            // Get the index of the clicked menu item
+            let index = $(this).index();
+
+            // Hide all containers and show the corresponding one
+            $(".bt-box").hide().eq(index).show();
+        });
+    });
+    
     function getWebsites() {
         $.post('/aapanel_varnish/get_websites.json', function(data) {
             let sites = data.msg;
