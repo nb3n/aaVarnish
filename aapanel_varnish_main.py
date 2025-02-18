@@ -10,12 +10,29 @@ class aapanel_varnish_main:
     # Set up the logger
     def __init__(self):
         log_folder = "/www/server/panel/plugin/aapanel_varnish/logs/"
+        # Ensure the logs folder exists
         if not os.path.exists(log_folder):
             os.makedirs(log_folder)
 
+        # Define the log file path
         log_file = os.path.join(log_folder, "varnish_operations.log")
-        logging.basicConfig(filename=log_file, level=logging.INFO,
-                            format="%(asctime)s - %(levelname)s - %(message)s")
+
+        # Set up the logging configuration
+        logging.basicConfig(
+            level=logging.INFO,
+            format="%(asctime)s - %(levelname)s - %(message)s",
+        )
+
+        # Create a file handler and add it to the logger
+        file_handler = logging.FileHandler(log_file)
+        file_handler.setLevel(logging.INFO)
+        file_handler.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - %(message)s"))
+        logging.getLogger().addHandler(file_handler)
+
+        # Ensure log file is created if not existing
+        if not os.path.isfile(log_file):
+            with open(log_file, "w"):  # Just to create an empty file if it doesn't exist
+                pass
         
     # Get logs from the logs folder
     def get_logs(self, args):
