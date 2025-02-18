@@ -58,7 +58,9 @@ class aapanel_varnish_main:
                         'content': message,
                         'timestamp': os.path.getmtime(log_path)
                     })
-        
+        # **Sort logs by timestamp (latest first)**
+        logs.sort(key=lambda x: x['timestamp'], reverse=True)
+
         return public.ReturnMsg(True, logs)
 
     # Clean up the logs by deleting the log files
